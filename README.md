@@ -11,9 +11,6 @@ Baileys adalah library TypeScript berbasis WebSocket untuk berinteraksi dengan W
 # Penggunaan
 Panduan terbaru telah dipublikasikan di https://baileys.wiki.
 
-# Sponsor
-Jika kamu ingin memberikan dukungan finansial untuk proyek ini, kamu bisa mendukung pengelola saat ini [di sini](https://purpshell.dev/sponsor).
-
 # Penyangkalan
 Proyek ini **tidak berafiliasi, tidak berasosiasi, tidak diotorisasi, tidak didukung, dan tidak memiliki koneksi resmi dengan WhatsApp** maupun anak perusahaan atau afiliasinya.  
 Situs resmi WhatsApp dapat ditemukan di whatsapp.com.  
@@ -23,17 +20,11 @@ Para pengelola Baileys **tidak mendukung penggunaan aplikasi ini untuk praktik y
 Kami menyerukan kepada setiap pengguna untuk menggunakan aplikasi ini secara bertanggung jawab dan sesuai tujuan awal pengembangannya.  
 Gunakan atas kebijakan pribadi masing-masing. Jangan gunakan untuk spam. Kami tidak mendukung penggunaan untuk stalkerware, pesan massal, ataupun automasi pesan yang bersifat mengganggu.
 
-# Lisensi
-Hak Cipta (c) 2025 Rajeh Taher/WhiskeySockets
+### Lisensi
 
-Dilindungi di bawah Lisensi MIT:  
-Izin diberikan secara cuma-cuma kepada siapa pun yang mendapatkan salinan perangkat lunak ini dan dokumentasi terkait ("Perangkat Lunak") untuk menggunakan, menyalin, memodifikasi, menggabungkan, menerbitkan, mendistribusikan, mensublisensikan, dan/atau menjual salinan Perangkat Lunak, serta mengizinkan orang yang menerima Perangkat Lunak untuk melakukan hal yang sama, dengan syarat sebagai berikut:
+Proyek ini menggunakan lisensi [MIT License](https://github.com/WhiskeySockets/Baileys?tab=readme-ov-file#license), dan merupakan karya turunan dari Baileys oleh Rajeh Taher/WhiskeySockets.
 
-Pernyataan hak cipta di atas dan izin ini harus disertakan dalam semua salinan atau bagian substansial dari Perangkat Lunak.
-
-PERANGKAT LUNAK INI DIBERIKAN "SEBAGAIMANA ADANYA", TANPA JAMINAN DALAM BENTUK APA PUN, BAIK TERSURAT MAUPUN TERSIRAT, TERMASUK NAMUN TIDAK TERBATAS PADA JAMINAN DAGANG, KESESUAIAN UNTUK TUJUAN TERTENTU, DAN NON-PELANGGARAN. DALAM KEADAAN APA PUN, PENULIS ATAU PEMEGANG HAK CIPTA TIDAK BERTANGGUNG JAWAB ATAS KLAIM, KERUGIAN, ATAU TANGGUNG JAWAB LAIN YANG TIMBUL DARI, ATAU TERKAIT DENGAN PERANGKAT LUNAK ATAU PENGGUNAAN PERANGKAT LUNAK.
-
-Dengan demikian, pengelola proyek ini **tidak dapat dimintai pertanggungjawaban atas segala bentuk penyalahgunaan** dari perangkat lunak ini.
+Dengan menggunakan proyek ini, Anda dianggap telah menyetujui ketentuan lisensi tersebut.
 
 ## Tentang Modifikasi
 
@@ -51,20 +42,39 @@ Harap dicatat bahwa meskipun proyek ini mengadaptasi struktur asli Baileys, selu
 
 ## Instalasi
 
-Gunakan versi stabil:
+Gunakan salah satu manajer paket berikut untuk menginstal versi stabil:
+
 ```bash
 npm install naruyaizumi
 ```
 
-Gunakan versi edge (berisi fitur dan perbaikan terbaru, namun tidak dijamin stabil):
 ```bash
-yarn add naruyaizumi@latest
+yarn add naruyaizumi
 ```
 
-Lalu impor modul di dalam proyek Anda menggunakan sintaks ESM:
+```bash
+pnpm add naruyaizumi
+```
+
+### Penggunaan
+
+**Untuk proyek dengan ESM (ECMAScript Modules):**
 ```javascript
 import makeWASocket from 'naruyaizumi'
 ```
+
+**Untuk proyek dengan CJS (CommonJS):**
+```javascript
+const makeWASocket = require('naruyaizumi')
+```
+
+naruyaizumi secara otomatis mendukung ESM dan CJS tanpa perlu konfigurasi tambahan.
+
+## Informasi
+
+Saat ini, `naruyaizumi` membutuhkan Node.js versi **20 atau lebih tinggi** untuk berjalan.
+
+Proyek ini secara eksplisit ditujukan untuk lingkungan modern dan tidak mendukung Node versi lama. Dukungan akan selalu mengikuti versi LTS terbaru dari Node.js untuk menjaga performa dan kompatibilitas dengan ekosistem terbaru.
 
 ## Menghubungkan Akun
 
@@ -294,12 +304,12 @@ import makeWASocket, {
 
 // Autentikasi menggunakan file tunggal (Single File Auth)
 const { state, saveState } = await useSingleFileAuthState('./auth_info_baileys.json')
-const suki = makeWASocket({
+const sock = makeWASocket({
   auth: state,
   printQRInTerminal: true
 })
 
-suki.ev.on('creds.update', saveState)
+sock.ev.on('creds.update', saveState)
 
 
 // Autentikasi menggunakan MongoDB
@@ -322,12 +332,12 @@ const collection = client.db('naruyaizumi').collection('sessions')
 const Authentication = await useMongoFileAuthState(collection)
 
 const { state, saveCreds } = Authentication
-const suki = makeWASocket({
+const sock = makeWASocket({
   auth: state,
   printQRInTerminal: true
 })
 
-suki.ev.on('creds.update', saveCreds)
+sock.ev.on('creds.update', saveCreds)
 ```
 
 > [!IMPORTANT]  
@@ -358,7 +368,7 @@ async function getMessage(key) {
   }
 }
 
-suki.ev.on('messages.update', async (chatUpdate) => {
+sock.ev.on('messages.update', async (chatUpdate) => {
   for (const { key, update } of chatUpdate) {
     if (update.pollUpdates && key.fromMe) {
       const pollCreation = await getMessage(key)
@@ -2306,6 +2316,80 @@ Durasi dalam detik:
 ```javascript
 let ephemeral = 86400
 await sock.updateDefaultDisappearingMode(ephemeral)
+```
+
+### NEWSLETTER
+
+- **Mendapatkan informasi newsletter**
+```javascript
+const metadata = await sock.newsletterMetadata("invite", "xxxxx")
+// atau
+const metadata = await sock.newsletterMetadata("jid", "abcd@newsletter")
+console.log(metadata)
+```
+
+- **Mengubah deskripsi newsletter**
+```javascript
+await sock.newsletterUpdateDescription("abcd@newsletter", "Deskripsi Baru")
+```
+
+- **Mengubah nama newsletter**
+```javascript
+await sock.newsletterUpdateName("abcd@newsletter", "Nama Baru")
+```
+
+- **Mengubah foto profil newsletter**
+```javascript
+await sock.newsletterUpdatePicture("abcd@newsletter", buffer)
+```
+
+- **Menghapus foto profil newsletter**
+```javascript
+await sock.newsletterRemovePicture("abcd@newsletter")
+```
+
+- **Mematikan notifikasi newsletter**
+```javascript
+await sock.newsletterMute("abcd@newsletter")
+```
+
+- **Mengaktifkan kembali notifikasi newsletter**
+```javascript
+await sock.newsletterUnmute("abcd@newsletter")
+```
+
+- **Membuat newsletter baru**
+```javascript
+const metadata = await sock.newsletterCreate("Nama Newsletter", "Deskripsi Newsletter")
+console.log(metadata)
+```
+
+- **Menghapus newsletter**
+```javascript
+await sock.newsletterDelete("abcd@newsletter")
+```
+
+- **Mengikuti newsletter**
+```javascript
+await sock.newsletterFollow("abcd@newsletter")
+```
+
+- **Berhenti mengikuti newsletter**
+```javascript
+await sock.newsletterUnfollow("abcd@newsletter")
+```
+
+- **Mengirim reaksi ke pesan di newsletter**
+```javascript
+const id = "175"
+await sock.newsletterReactMessage("abcd@newsletter", id, "🥳")
+```
+
+### Ikon AI
+
+```javascript
+// cukup tambahkan "ai: true" pada sendMessage
+await sock.sendMessage(id, { text: "Hello World", ai: true })
 ```
 
 ## Broadcast & Status WhatsApp
