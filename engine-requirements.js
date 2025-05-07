@@ -1,5 +1,5 @@
 const major = parseInt(process.versions.node.split('.')[0], 10)
-if (major < 22) {
+if (major < 20) {
 console.error(
 `\n❌ Paket ini membutuhkan Node.js versi 22 atau lebih tinggi.\n` +
 `   Saat ini kamu menggunakan Node.js versi ${process.versions.node}.\n` +
